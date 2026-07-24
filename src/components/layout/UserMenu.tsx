@@ -15,12 +15,21 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { useUser } from "@/features/auth/hooks/useUser"
 
-const userName = "Alex Morgan"
-const userEmail = "alex@inventrack.app"
 
 export default function UserMenu() {
+  const { data, isLoading, isError } = useUser();
   const navigate = useNavigate()
+
+if (isLoading) {
+  return null; // or a skeleton
+}
+
+if (isError || !data) {
+  return null; // or a fallback menu
+}
+
 
   return (
     <div className="flex items-center gap-2">
@@ -40,14 +49,14 @@ export default function UserMenu() {
           aria-label="Open user menu"
         >
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-sm font-semibold text-primary-foreground">
-            AM
+           {data.name.slice(0,1).toUpperCase()}
           </div>
           <div className="hidden min-w-0 flex-col items-start text-left sm:flex">
             <span className="truncate text-sm font-medium text-foreground">
-              {userName}
+              {data.name.slice(0,1)}
             </span>
             <span className="truncate text-xs text-muted-foreground">
-              Admin
+              ${data.role}
             </span>
           </div>
           <ChevronDown className="h-4 w-4 text-muted-foreground" />
@@ -56,8 +65,8 @@ export default function UserMenu() {
         <DropdownMenuContent sideOffset={12} align="end">
           <DropdownMenuLabel>
             <div className="space-y-1">
-              <p className="text-sm font-semibold text-foreground">{userName}</p>
-              <p className="text-xs text-muted-foreground">{userEmail}</p>
+              <p className="text-sm font-semibold text-foreground">{data.name}</p>
+              <p className="text-xs text-muted-foreground">{}</p>
             </div>
           </DropdownMenuLabel>
 
