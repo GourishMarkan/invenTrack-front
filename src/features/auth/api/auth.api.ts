@@ -6,8 +6,11 @@ export interface LoginDto {
 }
 
 export const login = async (data: LoginDto) => {
-  const response = await api.post("/auth/login", data);
-  return response.data;
+
+    
+    const response = await api.post("/auth/login", data);
+    return response.data;
+
 };
 
 export const logout = async () => {

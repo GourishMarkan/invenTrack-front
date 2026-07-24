@@ -5,8 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeOff } from "lucide-react";
-import { Link } from "react-router-dom";
-
+import { Link ,useNavigate} from "react-router-dom";
+import { useLogin } from "../hooks/useLogin";
+import { toast } from "react-toastify";
 type FormValues = {
   email: string;
   password: string;
@@ -18,18 +19,29 @@ export default function LoginPage(): JSX.Element {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<FormValues>({ mode: "onTouched" });
+  const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
-
+  const {mutate,isPending} = useLogin();
   const onSubmit = async (data: FormValues) => {
     // Simulate network delay. Do NOT connect to any backend here.
-    return new Promise<void>((resolve) => {
-      setTimeout(() => {
-        // eslint-disable-next-line no-console
-        console.log("Login attempt", data);
-        resolve();
-      }, 900);
-    });
+        mutate(data,{
+          onSuccess:(res)=>{
+            navigate("/")
+          },
+          onError:(err)=>{
+            console.error("Login failed:", err);
+           toast.error("Login failed. Please check your credentials and try again.");
+          }
+
+        })
+    // return new Promise<void>((resolve) => {
+    //   setTimeout(() => {
+    //     // eslint-disable-next-line no-console
+    //     console.log("Login attempt", data);
+    //     resolve();
+    //   }, 900);
+    // });
   };
 
   return (
