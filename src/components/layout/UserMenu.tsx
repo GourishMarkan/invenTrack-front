@@ -56,7 +56,7 @@ if (isError || !data) {
               {data.name.slice(0,1)}
             </span>
             <span className="truncate text-xs text-muted-foreground">
-              ${data.role}
+              {data.role}
             </span>
           </div>
           <ChevronDown className="h-4 w-4 text-muted-foreground" />

@@ -1,0 +1,116 @@
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import type { Product } from "@/features/products/types/product";
+
+type ProductFormValues = {
+  name: string;
+  sku: string;
+  supplier: string;
+  costPrice: number;
+  sellingPrice: number;
+  stock: number;
+  minStock: number;
+};
+
+type ProductFormProps = {
+  initialValues?: Product;
+  onSubmit: (values: ProductFormValues) => void;
+  onCancel: () => void;
+};
+
+const defaultValues: ProductFormValues = {
+  name: "",
+  sku: "",
+  supplier: "",
+  costPrice: 0,
+  sellingPrice: 0,
+  stock: 0,
+  minStock: 0,
+};
+
+export default function ProductForm({ initialValues, onSubmit, onCancel }: ProductFormProps) {
+  const form = useForm<ProductFormValues>({
+    defaultValues,
+  });
+
+  const { register, handleSubmit, reset } = form;
+
+  useEffect(() => {
+    if (!initialValues) {
+      reset(defaultValues);
+      return;
+    }
+
+    reset({
+      name: initialValues.name,
+      sku: initialValues.sku,
+      supplier: initialValues.supplier,
+      costPrice: initialValues.costPrice,
+      sellingPrice: initialValues.sellingPrice,
+      stock: initialValues.stock,
+      minStock: initialValues.minStock,
+    });
+  }, [initialValues, reset]);
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4 md:grid-cols-2">
+      <div className="space-y-2">
+        <Label htmlFor="name">Product Name</Label>
+        <Input id="name" {...register("name", { required: true })} placeholder="Wireless Mouse" />
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="sku">SKU</Label>
+        <Input id="sku" {...register("sku", { required: true })} placeholder="MSE-001" />
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="supplier">Supplier</Label>
+        <Input id="supplier" {...register("supplier", { required: true })} placeholder="Apex Supplies" />
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="stock">Stock</Label>
+        <Input id="stock" type="number" min={0} {...register("stock", { valueAsNumber: true })} />
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="costPrice">Cost Price</Label>
+        <Input
+          id="costPrice"
+          type="number"
+          min={0}
+          step="0.01"
+          {...register("costPrice", { valueAsNumber: true })}
+        />
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="sellingPrice">Selling Price</Label>
+        <Input
+          id="sellingPrice"
+          type="number"
+          min={0}
+          step="0.01"
+          {...register("sellingPrice", { valueAsNumber: true })}
+        />
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="minStock">Low Stock Threshold</Label>
+        <Input id="minStock" type="number" min={0} {...register("minStock", { valueAsNumber: true })} />
+      </div>
+
+      <div className="md:col-span-2 flex justify-end gap-2 pt-2">
+        <Button type="button" variant="outline" onClick={onCancel}>
+          Cancel
+        </Button>
+        <Button type="submit">Save Product</Button>
+      </div>
+    </form>
+  );
+}
