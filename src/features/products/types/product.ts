@@ -2,7 +2,7 @@ export type Product = {
   id: number;
   name: string;
   sku: string;
-  supplier: any;
+  supplier: Supplier;
   costPrice: number;
   sellingPrice: number;
   stock: number;
@@ -10,3 +10,8 @@ export type Product = {
 
 };
 
+export type Supplier={
+  name:string;
+  id:number,
+  mobileNumber:string
+}

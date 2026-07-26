@@ -1,23 +1,31 @@
 import { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { Controller,useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import type { Product } from "@/features/products/types/product";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import type { Product, Supplier } from "@/features/products/types/product";
 
 type ProductFormValues = {
   name: string;
   sku: string;
-  supplier: string;
   costPrice: number;
   sellingPrice: number;
   stock: number;
+  supplierName: string;
   minStock: number;
 };
 
 type ProductFormProps = {
   initialValues?: Product;
+  supplier?: Supplier[];
   onSubmit: (values: ProductFormValues) => void;
   onCancel: () => void;
 };
@@ -25,19 +33,21 @@ type ProductFormProps = {
 const defaultValues: ProductFormValues = {
   name: "",
   sku: "",
-  supplier: "",
+ 
+  supplierName: "",
+ 
   costPrice: 0,
   sellingPrice: 0,
   stock: 0,
   minStock: 0,
 };
 
-export default function ProductForm({ initialValues, onSubmit, onCancel }: ProductFormProps) {
+export default function ProductForm({ initialValues,supplier, onSubmit, onCancel }: ProductFormProps) {
   const form = useForm<ProductFormValues>({
     defaultValues,
   });
 
-  const { register, handleSubmit, reset } = form;
+  const { register, handleSubmit, reset,control } = form;
 
   useEffect(() => {
     if (!initialValues) {
@@ -48,10 +58,12 @@ export default function ProductForm({ initialValues, onSubmit, onCancel }: Produ
     reset({
       name: initialValues.name,
       sku: initialValues.sku,
-      supplier: initialValues.supplier,
+      
+      supplierName: initialValues.supplier.name,
       costPrice: initialValues.costPrice,
       sellingPrice: initialValues.sellingPrice,
       stock: initialValues.stock,
+      
       minStock: initialValues.minStock,
     });
   }, [initialValues, reset]);
@@ -70,7 +82,29 @@ export default function ProductForm({ initialValues, onSubmit, onCancel }: Produ
 
       <div className="space-y-2">
         <Label htmlFor="supplier">Supplier</Label>
-        <Input id="supplier" {...register("supplier", { required: true })} placeholder="Apex Supplies" />
+        {/* <Input id="supplier" {...register("supplier", { required: true })} placeholder="Apex Supplies" /> */}
+         <Controller
+          name="supplierName"
+          control={control}
+          render={({ field }) => (
+            <Select
+              value={field.value ? String(field.value) : ""}
+              onValueChange={ field.onChange}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select a supplier" />
+              </SelectTrigger>
+              <SelectContent>
+                {supplier?.map((item) => (
+                  <SelectItem key={item.id} value={item.name}>
+                    {item.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+        />
+
       </div>
 
       <div className="space-y-2">

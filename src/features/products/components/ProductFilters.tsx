@@ -1,11 +1,13 @@
 import { Search } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
+import type { Supplier } from "../types/product";
+
 
 type ProductFiltersProps = {
   searchTerm: string;
   selectedSupplier: string;
-  suppliers: string[];
+  suppliers: Supplier[];
   onSearchChange: (value: string) => void;
   onSupplierChange: (value: string) => void;
 };
@@ -37,9 +39,9 @@ export default function ProductFilters({
         aria-label="Filter by supplier"
       >
         <option value="all">All Suppliers</option>
-        {suppliers.map((supplier) => (
-          <option key={supplier} value={supplier}>
-            {supplier}
+        {suppliers.map((supplier: Supplier) => (
+          <option key={supplier.id} value={supplier.name}>
+            {supplier.name}
           </option>
         ))}
       </select>

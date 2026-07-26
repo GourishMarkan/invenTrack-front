@@ -6,8 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import ProductFilters from "@/features/products/components/ProductFilters";
 import ProductForm from "@/features/products/components/ProductForm";
 import ProductTable from "@/features/products/components/ProductTable";
-import type { Product } from "@/features/products/types/product";
+import type { Product,Supplier } from "@/features/products/types/product";
 import { useProduct } from "../hooks/useProducts";
+import { useSupplier } from "@/features/suppliers/hooks/useSuppliers";
 
 
 type ProductFormValues = {
@@ -22,15 +23,26 @@ type ProductFormValues = {
 
 export default function ProductsPage() {
   const {data}=useProduct();
+  const {data:suppliersData}=useSupplier();
   const [products, setProducts] = useState<Product[]>([] );
+  const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSupplier, setSelectedSupplier] = useState("all");
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+ 
 useEffect(() => {
-  if (data) setProducts(data);
+  if (data) setProducts(data)
+ 
+    
 }, [data]);
+useEffect(() => {
+  if (suppliersData) setSuppliers(suppliersData);
+}, [suppliersData]);
   // Prepared flags for future TanStack Query integration.
+ console.log("suppliers",suppliers)
+
+// ...existing code...
   const isLoading = false;
   const isError = false;
 
@@ -42,7 +54,7 @@ useEffect(() => {
         product.name.toLowerCase().includes(searchTerm.toLowerCase()) 
 
       const matchesSupplier =
-        selectedSupplier === "all" || product.supplier === selectedSupplier;
+        selectedSupplier === "all" || product.supplier.name === selectedSupplier;
 
       return matchesSearch && matchesSupplier;
     });
@@ -63,21 +75,43 @@ useEffect(() => {
   };
 
   const handleSave = (values: ProductFormValues) => {
-    if (editingProduct) {
-      setProducts((current) =>
-        current.map((item) =>
-          item.id === editingProduct.id ? { ...item, ...values } : item,
-        ),
-      );
-    } else {
-      setProducts((current) => {
-        const nextId = current.length > 0 ? Math.max(...current.map((item) => item.id)) + 1 : 1;
-        return [...current, { id: nextId, ...values }];
-      });
-    }
+    console.log("Saved product values:", values);
+     const selectedSupplier = suppliers.find((s) => s.name === values.supplier);
 
-    setEditingProduct(null);
-    setIsFormOpen(false);
+  if (!selectedSupplier) {
+    console.error("Supplier not found for:", values.supplier);
+    return;
+  }
+
+  const { supplier: _supplierName, ...rest } = values;
+
+  if (editingProduct) {
+    setProducts((current) =>
+      current.map((item) =>
+        item.id === editingProduct.id
+          ? { ...item, ...rest, supplier: selectedSupplier }
+          : item,
+      ),
+    );
+  } else {
+    
+    setProducts((current) => {
+      const nextId =
+        current.length > 0 ? Math.max(...current.map((item) => item.id)) + 1 : 1;
+
+      return [
+        ...current,
+        {
+          id: nextId,
+          ...rest,
+          supplier: selectedSupplier,
+        },
+      ];
+    });
+  }
+
+    // setEditingProduct(null);
+    // setIsFormOpen(false);
   };
 
   const closeForm = () => {
@@ -101,13 +135,13 @@ useEffect(() => {
         </Button>
       </header>
 
-      {/* <ProductFilters
+      <ProductFilters
         searchTerm={searchTerm}
         selectedSupplier={selectedSupplier}
         suppliers={suppliers}
         onSearchChange={setSearchTerm}
         onSupplierChange={setSelectedSupplier}
-      /> */}
+      />
 
       {isFormOpen && (
         <Card className="border-border">
@@ -117,6 +151,7 @@ useEffect(() => {
           <CardContent>
             <ProductForm
               initialValues={editingProduct ?? undefined}
+              supplier={suppliers}
               onSubmit={handleSave}
               onCancel={closeForm}
             />
