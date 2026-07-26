@@ -9,14 +9,16 @@ import ProductTable from "@/features/products/components/ProductTable";
 import type { Product,Supplier } from "@/features/products/types/product";
 import { useProduct } from "../hooks/useProducts";
 import { useSupplier } from "@/features/suppliers/hooks/useSuppliers";
+import { useCreateProduct } from "../hooks/useCreateProduct";
 
 
 type ProductFormValues = {
   name: string;
   sku: string;
-  supplier: string;
+
   costPrice: number;
   sellingPrice: number;
+  supplierName: string;
   stock: number;
   minStock: number;
 };
@@ -31,6 +33,8 @@ export default function ProductsPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
  
+  // mutation
+  const{mutate:createProduct}=useCreateProduct();
 useEffect(() => {
   if (data) setProducts(data)
  
@@ -76,42 +80,63 @@ useEffect(() => {
 
   const handleSave = (values: ProductFormValues) => {
     console.log("Saved product values:", values);
-     const selectedSupplier = suppliers.find((s) => s.name === values.supplier);
+     const selectedSupplier = suppliers.find((s) => s.name === values.supplierName);
 
   if (!selectedSupplier) {
-    console.error("Supplier not found for:", values.supplier);
+    console.error("Supplier not found for:", values.supplierName);
     return;
   }
 
-  const { supplier: _supplierName, ...rest } = values;
+  
 
   if (editingProduct) {
     setProducts((current) =>
       current.map((item) =>
         item.id === editingProduct.id
-          ? { ...item, ...rest, supplier: selectedSupplier }
+          ? { ...item, ...values, supplier: selectedSupplier }
           : item,
       ),
     );
   } else {
+    console.log("data",values, selectedSupplier)
+    const data={
+      name:values.name,
+      sku:values.sku,
+      costPrice:values.costPrice,
+      sellingPrice:values.sellingPrice,
+      stock:values.stock,
+      minStock:values.minStock,
+      supplierId:selectedSupplier.id
+    }
+    console.log("data",data)
     
-    setProducts((current) => {
-      const nextId =
-        current.length > 0 ? Math.max(...current.map((item) => item.id)) + 1 : 1;
+    
+    createProduct({
+      name:values.name,
+      sku:values.sku,
+      costPrice:values.costPrice,
+      sellingPrice:values.sellingPrice,
+      stock:values.stock,
+      minStock:values.minStock,
+      supplierId:selectedSupplier.id
+      
+    }, {
+      onSuccess: (newProduct) => {
+        // matching the new product with supplier
+        newProduct.supplier=selectedSupplier
 
-      return [
-        ...current,
-        {
-          id: nextId,
-          ...rest,
-          supplier: selectedSupplier,
-        },
-      ];
-    });
+        setProducts((current) => [...current, newProduct]);
+      },
+      onError: (error) => {
+        console.error("Error creating product:", error);
+      },  
+
+    })
+     
+    
   }
-
-    // setEditingProduct(null);
-    // setIsFormOpen(false);
+    setEditingProduct(null);
+    setIsFormOpen(false);
   };
 
   const closeForm = () => {

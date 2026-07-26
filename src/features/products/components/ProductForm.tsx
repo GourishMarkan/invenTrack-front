@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Controller,useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -33,21 +33,20 @@ type ProductFormProps = {
 const defaultValues: ProductFormValues = {
   name: "",
   sku: "",
- 
   supplierName: "",
- 
   costPrice: 0,
   sellingPrice: 0,
   stock: 0,
   minStock: 0,
 };
 
-export default function ProductForm({ initialValues,supplier, onSubmit, onCancel }: ProductFormProps) {
+export default function ProductForm({ initialValues, supplier, onSubmit, onCancel }: ProductFormProps) {
   const form = useForm<ProductFormValues>({
     defaultValues,
   });
 
-  const { register, handleSubmit, reset,control } = form;
+  const { register, handleSubmit, reset, control} = form;
+  // console.log("watch", watch());
 
   useEffect(() => {
     if (!initialValues) {
@@ -58,18 +57,20 @@ export default function ProductForm({ initialValues,supplier, onSubmit, onCancel
     reset({
       name: initialValues.name,
       sku: initialValues.sku,
-      
       supplierName: initialValues.supplier.name,
       costPrice: initialValues.costPrice,
       sellingPrice: initialValues.sellingPrice,
       stock: initialValues.stock,
-      
       minStock: initialValues.minStock,
     });
-  }, [initialValues, reset]);
+  }, [initialValues?.id, reset]);
+  const submit = (data: ProductFormValues) => {
+  console.log("submit", data);
+  onSubmit(data);
+};
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4 md:grid-cols-2">
+    <form onSubmit={handleSubmit(submit)} className="grid gap-4 md:grid-cols-2">
       <div className="space-y-2">
         <Label htmlFor="name">Product Name</Label>
         <Input id="name" {...register("name", { required: true })} placeholder="Wireless Mouse" />
@@ -81,16 +82,12 @@ export default function ProductForm({ initialValues,supplier, onSubmit, onCancel
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="supplier">Supplier</Label>
-        {/* <Input id="supplier" {...register("supplier", { required: true })} placeholder="Apex Supplies" /> */}
-         <Controller
+        <Label htmlFor="supplierName">Supplier</Label>
+        <Controller
           name="supplierName"
           control={control}
           render={({ field }) => (
-            <Select
-              value={field.value ? String(field.value) : ""}
-              onValueChange={ field.onChange}
-            >
+            <Select value={field.value} onValueChange={field.onChange}>
               <SelectTrigger>
                 <SelectValue placeholder="Select a supplier" />
               </SelectTrigger>
@@ -104,7 +101,6 @@ export default function ProductForm({ initialValues,supplier, onSubmit, onCancel
             </Select>
           )}
         />
-
       </div>
 
       <div className="space-y-2">
@@ -114,24 +110,12 @@ export default function ProductForm({ initialValues,supplier, onSubmit, onCancel
 
       <div className="space-y-2">
         <Label htmlFor="costPrice">Cost Price</Label>
-        <Input
-          id="costPrice"
-          type="number"
-          min={0}
-          step="0.01"
-          {...register("costPrice", { valueAsNumber: true })}
-        />
+        <Input id="costPrice" type="number" min={0} step="0.01" {...register("costPrice", { valueAsNumber: true })} />
       </div>
 
       <div className="space-y-2">
         <Label htmlFor="sellingPrice">Selling Price</Label>
-        <Input
-          id="sellingPrice"
-          type="number"
-          min={0}
-          step="0.01"
-          {...register("sellingPrice", { valueAsNumber: true })}
-        />
+        <Input id="sellingPrice" type="number" min={0} step="0.01" {...register("sellingPrice", { valueAsNumber: true })} />
       </div>
 
       <div className="space-y-2">
