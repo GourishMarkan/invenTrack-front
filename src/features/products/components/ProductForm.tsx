@@ -45,8 +45,9 @@ export default function ProductForm({ initialValues, supplier, onSubmit, onCance
     defaultValues,
   });
 
-  const { register, handleSubmit, reset, control} = form;
+  const { register, handleSubmit, reset, control,watch} = form;
   // console.log("watch", watch());
+  console.log("Stock:", watch("stock"));
 
   useEffect(() => {
     if (!initialValues) {
@@ -67,7 +68,7 @@ export default function ProductForm({ initialValues, supplier, onSubmit, onCance
   const submit = (data: ProductFormValues) => {
   console.log("submit", data);
   onSubmit(data);
-};
+  };
 
   return (
     <form onSubmit={handleSubmit(submit)} className="grid gap-4 md:grid-cols-2">
@@ -127,7 +128,7 @@ export default function ProductForm({ initialValues, supplier, onSubmit, onCance
         <Button type="button" variant="outline" onClick={onCancel}>
           Cancel
         </Button>
-        <Button type="submit">Save Product</Button>
+        <Button type="submit">  {initialValues ? "Update Product" : "Save Product"}</Button>
       </div>
     </form>
   );

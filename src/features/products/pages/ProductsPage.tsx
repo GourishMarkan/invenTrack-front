@@ -10,6 +10,7 @@ import type { Product,Supplier } from "@/features/products/types/product";
 import { useProduct } from "../hooks/useProducts";
 import { useSupplier } from "@/features/suppliers/hooks/useSuppliers";
 import { useCreateProduct } from "../hooks/useCreateProduct";
+import { useUpdateProduct } from "../hooks/useUpdateProduct";
 
 
 type ProductFormValues = {
@@ -35,6 +36,7 @@ export default function ProductsPage() {
  
   // mutation
   const{mutate:createProduct}=useCreateProduct();
+  const {mutate:updateProduct}=useUpdateProduct();
 useEffect(() => {
   if (data) setProducts(data)
  
@@ -90,13 +92,32 @@ useEffect(() => {
   
 
   if (editingProduct) {
-    setProducts((current) =>
-      current.map((item) =>
-        item.id === editingProduct.id
-          ? { ...item, ...values, supplier: selectedSupplier }
-          : item,
-      ),
-    );
+    updateProduct( {
+       id: editingProduct.id,
+      name:values.name,
+      sku:values.sku,
+      costPrice:values.costPrice,
+      sellingPrice:values.sellingPrice,
+      stock:values.stock,
+      minStock:values.minStock,
+      supplierId:selectedSupplier.id},
+      {
+        onSuccess(data, variables, onMutateResult, context) {
+          
+          setProducts((current) =>
+            current.map((item) =>
+              item.id === editingProduct.id
+                ? { ...item, ...values, supplier: selectedSupplier }
+                : item,
+            ),
+          );
+        },
+         onError: (error) => {
+        console.error("Error updating product:", error);
+      },
+      }
+    )
+
   } else {
     console.log("data",values, selectedSupplier)
     const data={
