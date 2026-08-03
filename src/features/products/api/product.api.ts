@@ -20,4 +20,5 @@ export const updateProduct = async({id,... data}:any) =>{
 export const deleteProduct = async (id:any) =>{
 
   const res=await api.delete(`/products/${id}`);
+  return res.data
 }
