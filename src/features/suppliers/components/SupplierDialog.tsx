@@ -6,7 +6,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import SupplierForm from "@/components/suppliers/SupplierForm";
+import SupplierForm from "@/features/suppliers/components/SupplierForm";
 import { useCreateSupplier } from "@/features/suppliers/hooks/useCreateSupplier";
 import { useUpdateSupplier } from "@/features/suppliers/hooks/useUpdateSupplier";
 import type { SupplierFormValues } from "@/features/suppliers/schemas/supplier.schema";
