@@ -37,18 +37,20 @@ export default function SupplierCard({
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
             <h3 className="truncate text-base font-semibold text-foreground">{supplier.name}</h3>
-            <p className="mt-1 text-sm text-muted-foreground">{supplier.phone}</p>
+            <p className="mt-1 text-sm text-muted-foreground">{supplier.mobileNumber}</p>
             {/* <p className="mt-2 text-xs text-muted-foreground">
               Created {formatDate(supplier.createdAt)}
             </p> */}
           </div>
 
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" aria-label={`Open actions for ${supplier.name}`}>
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
+            <DropdownMenuTrigger
+              className="inline-flex h-9 w-9 items-center justify-center rounded-md hover:bg-accent transition-colors"
+              aria-label={`Open actions for ${supplier.name}`}
+            >
+            <MoreHorizontal className="h-4 w-4" />
+           </DropdownMenuTrigger>
+          
             <DropdownMenuContent align="end">
               <DropdownMenuItem onClick={() => onView(supplier)}>
                 <Eye className="mr-2 h-4 w-4" />

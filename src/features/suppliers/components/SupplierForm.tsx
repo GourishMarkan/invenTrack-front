@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {toast} from 'react-toastify';
 import { supplierSchema, type SupplierFormValues } from "@/features/suppliers/schemas/supplier.schema";
 
 type SupplierFormProps = {
@@ -36,13 +37,15 @@ export default function SupplierForm({
     register,
     handleSubmit,
     reset,
+    watch,
     formState: { errors },
   } = form;
 
   useEffect(() => {
     reset(defaultValues ?? fallbackValues);
   }, [defaultValues, reset]);
-
+  console.log( watch("name"));
+  console.log( watch("mobileNumber"));
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="grid gap-5">
       <div className="grid gap-2">
@@ -60,7 +63,7 @@ export default function SupplierForm({
         <Label htmlFor="mobileNumber">Phone Number</Label>
         <Input
           id="mobileNumber"
-          placeholder="7011928985"
+          placeholder="701190000"
           aria-invalid={errors.mobileNumber ? "true" : "false"}
           {...register("mobileNumber")}
         />

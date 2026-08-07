@@ -11,6 +11,8 @@ import { useProduct } from "../hooks/useProducts";
 import { useSuppliers } from "@/features/suppliers/hooks/useSuppliers";
 import { useCreateProduct } from "../hooks/useCreateProduct";
 import { useUpdateProduct } from "../hooks/useUpdateProduct";
+import {toast} from "react-toastify"
+import PageLoader from "@/components/loaders/PageLoader";
 
 
 type ProductFormValues = {
@@ -25,8 +27,8 @@ type ProductFormValues = {
 };
 
 export default function ProductsPage() {
-  const {data}=useProduct();
-  const {data:suppliersData}=useSuppliers();
+  const {data,isLoading:productLoading}=useProduct();
+  const {data:suppliersData,isLoading:supplerLoading}=useSuppliers();
   const [products, setProducts] = useState<Product[]>([] );
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -111,9 +113,11 @@ useEffect(() => {
                 : item,
             ),
           );
+          toast.success("product edited successfully")
         },
          onError: (error) => {
         console.error("Error updating product:", error);
+        toast.error("Error updating product")
       },
       }
     )
@@ -144,12 +148,15 @@ useEffect(() => {
     }, {
       onSuccess: (newProduct) => {
         // matching the new product with supplier
+        toast.success("product created successfully")
         newProduct.supplier=selectedSupplier
 
         setProducts((current) => [...current, newProduct]);
+
       },
       onError: (error) => {
         console.error("Error creating product:", error);
+        toast.error("Error in Creating Product")
       },  
 
     })
@@ -164,6 +171,10 @@ useEffect(() => {
     setEditingProduct(null);
     setIsFormOpen(false);
   };
+
+  if(supplerLoading||productLoading){
+    return <PageLoader/>
+  }
 
   return (
     <div className="space-y-5">

@@ -18,6 +18,8 @@ import {
 } from "@/components/ui/breadcrumb";
 import { useSuppliers } from "../hooks/useSuppliers";
 import type { Supplier } from "@/features/suppliers/types/supplier";
+import { useCreateSupplier } from "../hooks/useCreateSupplier";
+import PageLoader from "@/components/loaders/PageLoader";
 
 export default function SuppliersPage() {
   const { data, isLoading, isError, refetch } = useSuppliers();
@@ -32,10 +34,10 @@ export default function SuppliersPage() {
 
   const filteredSuppliers = useMemo(() => {
     const query = searchTerm.trim().toLowerCase();
-    if (!query) return suppliers;
+    if (!query) return suppliers; 
 
     return suppliers.filter(
-      (supplier) =>
+      (supplier:any) =>
         supplier.name.toLowerCase().includes(query) ||
         supplier.mobileNumber.toLowerCase().includes(query),
     );
@@ -64,6 +66,9 @@ export default function SuppliersPage() {
 
   const hasSuppliers = filteredSuppliers.length > 0;
   const useCards = filteredSuppliers.length > 0;
+  if(isLoading){
+    return <PageLoader/>
+  }
 
   return (
     <div className="space-y-6">
@@ -114,7 +119,7 @@ export default function SuppliersPage() {
 
       {useCards ? (
         <div className="grid gap-4 md:hidden">
-          {filteredSuppliers.map((supplier) => (
+          {filteredSuppliers.map((supplier:any) => (
             <SupplierCard
               key={supplier.id}
               supplier={supplier}

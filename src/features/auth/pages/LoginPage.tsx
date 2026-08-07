@@ -8,6 +8,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { Link ,useNavigate} from "react-router-dom";
 import { useLogin } from "../hooks/useLogin";
 import { toast } from "react-toastify";
+import LoginLoader from "@/components/loaders/LoginLoader";
 type FormValues = {
   email: string;
   password: string;
@@ -23,10 +24,11 @@ export default function LoginPage(): JSX.Element {
 
   const [showPassword, setShowPassword] = useState(false);
   const {mutate,isPending} = useLogin();
-  const onSubmit = async (data: FormValues) => {
-    // Simulate network delay. Do NOT connect to any backend here.
+  const onSubmit = (data: FormValues) => {
+   
         mutate(data,{
-          onSuccess:(res)=>{
+          onSuccess:()=>{
+            toast.success("navigating to dashboard")
             navigate("/")
           },
           onError:(err)=>{
@@ -35,14 +37,12 @@ export default function LoginPage(): JSX.Element {
           }
 
         })
-    // return new Promise<void>((resolve) => {
-    //   setTimeout(() => {
-    //     // eslint-disable-next-line no-console
-    //     console.log("Login attempt", data);
-    //     resolve();
-    //   }, 900);
-    // });
+ 
   };
+
+  if(isPending){
+   return <LoginLoader/>
+  }
 
   return (
     <main className="min-h-screen bg-background flex items-center justify-center p-6">
@@ -111,8 +111,8 @@ export default function LoginPage(): JSX.Element {
             </Link>
           </div>
 
-          <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? "Signing in..." : "Sign in"}
+          <Button type="submit" className="w-full" disabled={isPending}>
+            {isPending ? "Signing in..." : "Sign in"}
           </Button>
         </form>
 

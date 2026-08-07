@@ -34,7 +34,7 @@ export default function SupplierDialog({
 
   const defaultValues: SupplierFormValues = {
     name: supplier?.name ?? "",
-    mobileNumber: supplier?.phone ?? "",
+    mobileNumber: supplier?.mobileNumber ?? "",
   };
 
   useEffect(() => {
@@ -48,6 +48,7 @@ export default function SupplierDialog({
 
     try {
       if (mode === "create") {
+        console.log("values is",values)
         await createMutation.mutateAsync(values as never);
       } else if (supplier) {
         await updateMutation.mutateAsync({

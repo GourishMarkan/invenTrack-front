@@ -1,7 +1,7 @@
 export interface Supplier {
   id: string;
   name: string;
-  phone: string;
+  mobileNumber: string;
   createdAt: string;
   updatedAt: string;
 }

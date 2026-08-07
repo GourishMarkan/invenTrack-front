@@ -63,7 +63,7 @@ export default function SupplierTable({
     return suppliers.filter(
       (supplier) =>
         supplier.name.toLowerCase().includes(query) ||
-        supplier.phone.toLowerCase().includes(query),
+        supplier.mobileNumber.toLowerCase().includes(query),
     );
   }, [search, suppliers]);
 
@@ -137,7 +137,7 @@ export default function SupplierTable({
               filteredSuppliers.map((supplier) => (
                 <TableRow key={supplier.id} className="hover:bg-muted/40">
                   <TableCell className="font-medium">{supplier.name}</TableCell>
-                  <TableCell className="text-muted-foreground">{supplier.phone}</TableCell>
+                  <TableCell className="text-muted-foreground">{supplier.mobileNumber}</TableCell>
                   {/* <TableCell className="text-muted-foreground">
                     {formatDate(supplier.createdAt)}
                   </TableCell> */}
