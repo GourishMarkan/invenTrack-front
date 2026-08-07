@@ -17,13 +17,13 @@ type SupplierCardProps = {
   onDelete: (supplier: Supplier) => void;
 };
 
-function formatDate(value: string) {
-  return new Intl.DateTimeFormat("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  }).format(new Date(value));
-}
+// function formatDate(value: string) {
+//   return new Intl.DateTimeFormat("en-US", {
+//     year: "numeric",
+//     month: "short",
+//     day: "numeric",
+//   }).format(new Date(value));
+// }
 
 export default function SupplierCard({
   supplier,
@@ -38,9 +38,9 @@ export default function SupplierCard({
           <div className="min-w-0">
             <h3 className="truncate text-base font-semibold text-foreground">{supplier.name}</h3>
             <p className="mt-1 text-sm text-muted-foreground">{supplier.phone}</p>
-            <p className="mt-2 text-xs text-muted-foreground">
+            {/* <p className="mt-2 text-xs text-muted-foreground">
               Created {formatDate(supplier.createdAt)}
-            </p>
+            </p> */}
           </div>
 
           <DropdownMenu>

@@ -118,7 +118,7 @@ export default function SupplierTable({
             <TableRow>
               <TableHead>Supplier Name</TableHead>
               <TableHead>Phone</TableHead>
-              <TableHead>Created At</TableHead>
+              {/* <TableHead>Created At</TableHead> */}
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -138,9 +138,9 @@ export default function SupplierTable({
                 <TableRow key={supplier.id} className="hover:bg-muted/40">
                   <TableCell className="font-medium">{supplier.name}</TableCell>
                   <TableCell className="text-muted-foreground">{supplier.phone}</TableCell>
-                  <TableCell className="text-muted-foreground">
+                  {/* <TableCell className="text-muted-foreground">
                     {formatDate(supplier.createdAt)}
-                  </TableCell>
+                  </TableCell> */}
                   <TableCell className="text-right">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>

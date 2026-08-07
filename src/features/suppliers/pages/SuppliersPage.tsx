@@ -37,7 +37,7 @@ export default function SuppliersPage() {
     return suppliers.filter(
       (supplier) =>
         supplier.name.toLowerCase().includes(query) ||
-        supplier.phone.toLowerCase().includes(query),
+        supplier.mobileNumber.toLowerCase().includes(query),
     );
   }, [searchTerm, suppliers]);
 

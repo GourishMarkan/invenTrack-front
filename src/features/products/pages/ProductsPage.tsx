@@ -8,7 +8,7 @@ import ProductForm from "@/features/products/components/ProductForm";
 import ProductTable from "@/features/products/components/ProductTable";
 import type { Product,Supplier } from "@/features/products/types/product";
 import { useProduct } from "../hooks/useProducts";
-import { useSupplier } from "@/features/suppliers/hooks/useSuppliers";
+import { useSuppliers } from "@/features/suppliers/hooks/useSuppliers";
 import { useCreateProduct } from "../hooks/useCreateProduct";
 import { useUpdateProduct } from "../hooks/useUpdateProduct";
 
@@ -26,7 +26,7 @@ type ProductFormValues = {
 
 export default function ProductsPage() {
   const {data}=useProduct();
-  const {data:suppliersData}=useSupplier();
+  const {data:suppliersData}=useSuppliers();
   const [products, setProducts] = useState<Product[]>([] );
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
