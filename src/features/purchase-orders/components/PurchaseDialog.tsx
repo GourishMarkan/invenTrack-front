@@ -35,7 +35,7 @@ export default function PurchaseDialog({
   onSubmit,
 }: PurchaseDialogProps) {
   const formContainerRef = useRef<HTMLDivElement | null>(null);
-
+  console.log("supplier",suppliers);
   const title = mode === "create" ? "Create Purchase" : "Edit Purchase";
   const description =
     mode === "create" ? "Create a new purchase." : "Update purchase details.";
@@ -76,14 +76,14 @@ export default function PurchaseDialog({
           />
         </div>
 
-        <DialogFooter className="sticky bottom-0 rounded-none border-t bg-background px-6 py-4 sm:justify-end">
+        {/* <DialogFooter className="sticky bottom-0 rounded-none border-t bg-background px-6 py-4 sm:justify-end">
           <Button type="button" variant="outline" onClick={handleCancel} disabled={loading}>
             Cancel
           </Button>
           <Button type="button" onClick={handleFooterSubmit} disabled={loading}>
             {loading ? loadingLabel : submitLabel}
           </Button>
-        </DialogFooter>
+        </DialogFooter> */}
       </DialogContent>
     </Dialog>
   );

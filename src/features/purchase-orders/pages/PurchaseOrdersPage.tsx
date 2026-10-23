@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import PurchaseTable from "@/features/purchase-orders/components/PurchaseTable";
 import PurchaseDialog from "@/features/purchase-orders/components/PurchaseDialog";
 import DeletePurchaseDialog from "@/features/purchase-orders/components/DeletePurchaseDialog";
+import { useSuppliers } from "@/features/suppliers/hooks/useSuppliers";
 
 import { usePurchases } from "@/features/purchase-orders/hooks/usePurchases";
 import { useCreatePurchase } from "@/features/purchase-orders/hooks/useCreatePurchase";
@@ -14,6 +15,7 @@ import { useUpdatePurchase } from "@/features/purchase-orders/hooks/useUpdatePur
 import { useDeletePurchase } from "@/features/purchase-orders/hooks/useDeletePurchase";
 
 import type { Purchase } from "@/features/purchase-orders/types/purchase";
+import { useProduct } from "@/features/products/hooks/useProducts";
 
 export default function PurchasesPage() {
   const [search, setSearch] = useState("");
@@ -33,6 +35,12 @@ export default function PurchasesPage() {
   const updatePurchaseMutation = useUpdatePurchase();
   const deletePurchaseMutation = useDeletePurchase();
 
+  const { data: suppliersData } = useSuppliers();
+  const { data: productsData } = useProduct();
+
+  const suppliers = suppliersData ?? [];
+  const products = productsData ?? [];
+
   const filteredPurchases = useMemo(() => {
     const query = search.trim().toLowerCase();
 
@@ -40,7 +48,7 @@ export default function PurchasesPage() {
       return purchases;
     }
 
-    return purchases.filter((purchase) => {
+    return purchases.filter((purchase:any) => {
       const supplierName =
         purchase.supplier?.name ??
         `Supplier ${purchase.supplierId}`;
@@ -173,8 +181,8 @@ export default function PurchasesPage() {
         onOpenChange={setPurchaseDialogOpen}
         mode={dialogMode}
         purchase={selectedPurchase}
-        suppliers={[]}
-        products={[]}
+        suppliers={suppliers}
+        products={products}
         loading={isSubmitting}
         onSubmit={handlePurchaseSubmit}
       />
