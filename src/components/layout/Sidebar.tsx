@@ -25,7 +25,7 @@ const navigationItems = [
   { to: "/products", label: "Products", icon: Boxes },
   { to: "/suppliers", label: "Suppliers", icon: Truck },
   { to: "/purchase-orders", label: "Purchase Orders", icon: ClipboardList },
-  { to: "/purchases", label: "Purchases", icon: PackageSearch },
+  // { to: "/purchases", label: "Purchases", icon: PackageSearch },
   { to: "/settings", label: "Settings", icon: Settings2 },
 ]
 
